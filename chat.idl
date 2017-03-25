@@ -1,0 +1,22 @@
+module chat {
+	interface ChatClient {
+	    string update_contact(in string talk_id, in string phone, in string name, in string online);
+		string update_talk(in string text, in string talk_id);
+	};
+	exception IncorrectSecret {};
+	exception NameAlreadyUsed {};
+	exception UnknownID {};
+	interface ChatServer {
+		string auth(in string phone)
+		    raises (NameAlreadyUsed);
+		string subscribe(in string user_key, in string secret, in ChatClient c)
+			raises (NameAlreadyUsed, IncorrectSecret);
+		void unsubscribe(in string user_key) raises (UnknownID);
+		string comment(in string user_key, in string talk_id, in string text)
+		    raises (UnknownID);
+	    string add_contact(in string user_phone, in string contact_phone);
+	    string create_group(in string name);
+	    string add_user_group(in string group_id, in string user_id);
+	    string remove_user_group(in string group_id, in string user_id);
+	};
+};
